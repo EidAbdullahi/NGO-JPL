@@ -1,0 +1,60 @@
+{% extends "core/base_dashboard.html" %}
+{% block title %}Labour Dashboard{% endblock %}
+
+{% block content %}
+<h3 class="mb-4">Labour Dashboard</h3>
+
+<!-- Optional Stats Cards -->
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="stats-card bg-dark-blue">
+      <h4>{{ stats.workforce }}</h4>
+      <p>Total Workforce</p>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="stats-card bg-blue">
+      <h4>{{ stats.active_workers }}</h4>
+      <p>Active Workers</p>
+    </div>
+  </div>
+</div>
+
+<!-- Workforce Table -->
+<div class="row g-3">
+  <div class="col-md-12">
+    <div class="card p-3">
+      <table class="table table-striped table-hover">
+        <thead class="table-dark">
+          <tr>
+            <th>Project</th>
+            <th>NGO</th>
+            <th>Total Workers</th>
+            <th>Skilled</th>
+            <th>Unskilled</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for wf in workforce %}
+          <tr>
+            <td>{{ wf.project.title }}</td>
+            <td>{{ wf.project.ngo.name }}</td>
+            <td>{{ wf.total_workers }}</td>
+            <td>{{ wf.skilled_workers }}</td>
+            <td>{{ wf.unskilled_workers }}</td>
+            <td>
+              <a href="{% url 'workforce_edit' wf.id %}" class="btn btn-sm btn-primary">Edit</a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6" class="text-center">No workforce records found.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

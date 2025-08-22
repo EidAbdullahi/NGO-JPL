@@ -1,0 +1,32 @@
+<table class="table table-striped table-hover shadow-sm">
+  <thead class="table-dark">
+    <tr>
+      <th>Worker</th><th>Nationality</th><th>Permit #</th><th>Project</th><th>NGO</th><th>Expiry</th><th>Status</th><th></th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for p in permits %}
+    <tr>
+      <td>{{ p.worker_name }}</td>
+      <td>{{ p.nationality }}</td>
+      <td>{{ p.permit_number }}</td>
+      <td>{{ p.project.title }}</td>
+      <td>{{ p.project.ngo.name }}</td>
+      <td>{{ p.expiry_date }}</td>
+      <td>
+        {% if p.expiry_date < today %}
+          <span class="badge bg-danger">Expired</span>
+        {% else %}
+          <span class="badge bg-success">Valid</span>
+        {% endif %}
+      </td>
+      <td class="text-end">
+        <a class="btn btn-sm btn-outline-secondary" href="{% url 'permit_update' p.pk %}"><i class="bi bi-pencil-square"></i></a>
+        <a class="btn btn-sm btn-outline-danger" href="{% url 'permit_delete' p.pk %}"><i class="bi bi-trash"></i></a>
+      </td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="8">No permits found.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>

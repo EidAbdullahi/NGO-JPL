@@ -1,0 +1,31 @@
+{% extends "core/base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block header %}Admin Dashboard{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-3">
+        <div class="stats-card bg-dark-blue">
+            <h4>{{ stats.ngos }}</h4>
+            <p>NGOs</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stats-card bg-blue">
+            <h4>{{ stats.projects }}</h4>
+            <p>Projects</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stats-card bg-light-blue">
+            <h4>{{ stats.users }}</h4>
+            <p>Users</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stats-card bg-white">
+            <h4>{{ stats.permits }}</h4>
+            <p>Permits</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

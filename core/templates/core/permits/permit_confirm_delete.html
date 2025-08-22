@@ -1,0 +1,12 @@
+{% extends "core/base.html" %}
+{% block content %}
+h3 class="mb-3">Delete Permit</h3>
+<div class="card p-3 shadow-sm">
+  <p>Are you sure you want to delete permit <strong>{{ permit.permit_number }}</strong> ({{ permit.worker_name }})?</p>
+  <form method="post">
+    {% csrf_token %}
+    <button class="btn btn-danger">Delete</button>
+    <a href="{% url 'permit_list' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+{% endblock %}

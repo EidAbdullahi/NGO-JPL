@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Login - NGO Monitoring System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container d-flex justify-content-center align-items-center vh-100">
+  <div class="card shadow-lg p-4" style="width: 28rem;">
+    <h3 class="text-center mb-3">NGO Monitoring System</h3>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button class="btn btn-primary w-100">Login</button>
+    </form>
+    {% if form.errors %}
+      <div class="alert alert-danger mt-3">Invalid username or password.</div>
+    {% endif %}
+  </div>
+</div>
+</body>
+</html>

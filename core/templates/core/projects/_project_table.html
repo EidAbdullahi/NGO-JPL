@@ -1,0 +1,30 @@
+<table class="table table-striped table-hover shadow-sm">
+  <thead class="table-dark">
+    <tr>
+      <th>NGO</th><th>Title</th><th>Start</th><th>End</th><th>Status</th><th></th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for p in projects %}
+    <tr>
+      <td>{{ p.ngo.name }}</td>
+      <td>{{ p.title }}</td>
+      <td>{{ p.start_date }}</td>
+      <td>{{ p.end_date|default:"—" }}</td>
+      <td>
+        {% if p.completed %}
+          <span class="badge bg-success">Completed</span>
+        {% else %}
+          <span class="badge bg-warning text-dark">In Progress</span>
+        {% endif %}
+      </td>
+      <td class="text-end">
+        <a class="btn btn-sm btn-outline-secondary" href="{% url 'project_update' p.pk %}"><i class="bi bi-pencil-square"></i></a>
+        <a class="btn btn-sm btn-outline-danger" href="{% url 'project_delete' p.pk %}"><i class="bi bi-trash"></i></a>
+      </td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="6">No projects yet.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>

@@ -1,0 +1,40 @@
+{% extends "core/base.html" %}
+{% block title %}Migration Dashboard{% endblock %}
+{% block content %}
+<h2 class="mb-4">Migration Dashboard</h2>
+<a href="{% url 'permit_create' %}" class="btn btn-success mb-3"><i class="bi bi-plus-circle"></i> New Permit</a>
+
+<table class="table table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Permit #</th>
+            <th>Project</th>
+            <th>Expiry</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for permit in permits %}
+        <tr>
+            <td>{{ permit.permit_number }}</td>
+            <td>{{ permit.project.title }}</td>
+            <td>{{ permit.expiry_date }}</td>
+            <td>
+                {% if permit.expiry_date < today %}
+                    <span class="badge bg-danger">Expired</span>
+                {% else %}
+                    <span class="badge bg-success">Valid</span>
+                {% endif %}
+            </td>
+            <td>
+                <a href="{% url 'permit_update' permit.id %}" class="btn btn-sm btn-warning">Edit</a>
+                <a href="{% url 'permit_delete' permit.id %}" class="btn btn-sm btn-danger">Delete</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" class="text-center">No permits available.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
