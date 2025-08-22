@@ -25,15 +25,29 @@ class User(AbstractUser):
 
 
 # -------------------------
+from django.db import models
+
+# -------------------------
 # NGO
 # -------------------------
 class NGO(models.Model):
     name = models.CharField(max_length=200, unique=True)
     description = models.TextField(blank=True)
+    
+    # New fields
+    email = models.EmailField(max_length=254, blank=True, null=True)
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
+    address = models.TextField(blank=True, null=True)
+    area_manager = models.CharField(max_length=200, blank=True, null=True)
+    website = models.URLField(blank=True, null=True)
+    profile_picture = models.ImageField(upload_to='ngo_profiles/', blank=True, null=True)
+    
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)  # tracks changes
 
     def __str__(self):
         return self.name
+
 
 
 # -------------------------
@@ -81,18 +95,48 @@ class Workforce(models.Model):
 
 # -------------------------
 # -------------------------
+from django.db import models
+
+# -------------------------
+# Worker
+# -------------------------
+class Worker(models.Model):
+    name = models.CharField(max_length=200)
+    email = models.EmailField(blank=True, null=True)
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
+    salary = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)  # New field
+
+    def __str__(self):
+        return self.name
+
+# -------------------------
 # Permit
 # -------------------------
 class Permit(models.Model):
+    PERMIT_TYPE_CHOICES = [
+        ("NGO", "NGO Permit"),
+        ("FOREIGN_WORKER", "Foreign Worker Permit"),
+    ]
+
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="permits")
     permit_number = models.CharField(max_length=100, unique=True)
+    permit_type = models.CharField(max_length=20, choices=PERMIT_TYPE_CHOICES, default="NGO")
     issue_date = models.DateField()
     expiry_date = models.DateField()
+    workers = models.ManyToManyField(Worker, blank=True, related_name="permits")  # only for FOREIGN_WORKER
 
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    @property
+    def status(self):
+        from django.utils.timezone import now
+        return "expired" if self.expiry_date < now().date() else "valid"
 
     def __str__(self):
-        return f"Permit {self.permit_number} for {self.project.title}"
+        return f"{self.permit_number} ({self.get_permit_type_display()})"
+
+
 
     @property
     def status(self):

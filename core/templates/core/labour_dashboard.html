@@ -1,6 +1,8 @@
 {% extends "core/base_dashboard.html" %}
 {% block title %}Labour Dashboard{% endblock %}
 
+{% block header %}Labour Dashboard{% endblock %}
+
 {% block content %}
 <h3 class="mb-4">Labour Dashboard</h3>
 
@@ -8,14 +10,14 @@
 <div class="row g-3 mb-4">
   <div class="col-md-3">
     <div class="stats-card bg-dark-blue">
-      <h4>{{ stats.workforce }}</h4>
+      <h4>{{ total_workforce }}</h4>
       <p>Total Workforce</p>
     </div>
   </div>
   <div class="col-md-3">
     <div class="stats-card bg-blue">
-      <h4>{{ stats.active_workers }}</h4>
-      <p>Active Workers</p>
+      <h4>{{ total_projects }}</h4>
+      <p>Projects</p>
     </div>
   </div>
 </div>
@@ -40,7 +42,7 @@
           <tr>
             <td>{{ wf.project.title }}</td>
             <td>{{ wf.project.ngo.name }}</td>
-            <td>{{ wf.total_workers }}</td>
+            <td>{{ wf.total_workers_count }}</td>
             <td>{{ wf.skilled_workers }}</td>
             <td>{{ wf.unskilled_workers }}</td>
             <td>

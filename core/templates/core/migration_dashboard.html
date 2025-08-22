@@ -1,39 +1,56 @@
 {% extends "core/base.html" %}
-{% block title %}Migration Dashboard{% endblock %}
-{% block content %}
-<h2 class="mb-4">Migration Dashboard</h2>
-<a href="{% url 'permit_create' %}" class="btn btn-success mb-3"><i class="bi bi-plus-circle"></i> New Permit</a>
+{% block title %}Migration Employment Dashboard{% endblock %}
 
-<table class="table table-bordered">
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Migration Employment Dashboard</h2>
+    <a href="{% url 'permit_create' %}" class="btn btn-success">
+        <i class="bi bi-plus-circle"></i> New Permit
+    </a>
+</div>
+
+<table class="table table-striped table-hover align-middle">
     <thead class="table-dark">
         <tr>
-            <th>Permit #</th>
-            <th>Project</th>
-            <th>Expiry</th>
-            <th>Status</th>
-            <th></th>
+            <th scope="col">Permit #</th>
+            <th scope="col">Worker(s)</th>
+            <th scope="col">Expiry Date</th>
+            <th scope="col">Status</th>
+            <th scope="col">Actions</th>
         </tr>
     </thead>
     <tbody>
         {% for permit in permits %}
         <tr>
             <td>{{ permit.permit_number }}</td>
-            <td>{{ permit.project.title }}</td>
-            <td>{{ permit.expiry_date }}</td>
             <td>
-                {% if permit.expiry_date < today %}
+                {% for worker in permit.workers.all %}
+                    {{ worker.name }}{% if not forloop.last %}, {% endif %}
+                {% empty %}
+                    <span class="text-muted">No worker assigned</span>
+                {% endfor %}
+            </td>
+            <td>{{ permit.expiry_date|date:"M d, Y" }}</td>
+            <td>
+                {% if permit.status == "expired" %}
                     <span class="badge bg-danger">Expired</span>
                 {% else %}
                     <span class="badge bg-success">Valid</span>
                 {% endif %}
             </td>
             <td>
-                <a href="{% url 'permit_update' permit.id %}" class="btn btn-sm btn-warning">Edit</a>
-                <a href="{% url 'permit_delete' permit.id %}" class="btn btn-sm btn-danger">Delete</a>
+                <a href="{% url 'permit_update' permit.id %}" class="btn btn-sm btn-warning" title="Edit Permit">
+                    <i class="bi bi-pencil-square"></i>
+                </a>
+                <a href="{% url 'permit_delete' permit.id %}" class="btn btn-sm btn-danger" title="Delete Permit" onclick="return confirm('Are you sure you want to delete this permit?');">
+                    <i class="bi bi-trash"></i>
+                </a>
             </td>
         </tr>
         {% empty %}
-        <tr><td colspan="5" class="text-center">No permits available.</td></tr>
+        <tr>
+            <td colspan="5" class="text-center text-muted">No migration permits available.</td>
+        </tr>
         {% endfor %}
     </tbody>
 </table>

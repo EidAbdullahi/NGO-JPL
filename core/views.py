@@ -83,33 +83,41 @@ from .utils import require_role
 @login_required
 def labour_dashboard(request):
     require_role(request.user, User.LABOUR, User.ADMIN)
-
     workforce = Workforce.objects.select_related("project", "project__ngo").all()
 
-    # Optional: calculate total workers for stats
-    total_workers = sum(wf.local_workers + wf.foreign_workers for wf in workforce)
+    # Add a total attribute to each object
+    for wf in workforce:
+        wf.total_workers_count = wf.local_workers + wf.foreign_workers
 
-    return render(request, "core/labour_dashboard.html", {
+    total_workforce = sum([wf.total_workers_count for wf in workforce])
+    total_projects = workforce.count()
+
+    context = {
         "workforce": workforce,
-        "total_workers": total_workers
-    })
+        "total_workforce": total_workforce,
+        "total_projects": total_projects,
+    }
+    return render(request, "core/labour_dashboard.html", context)
+
 
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from .models import Permit, User
 from .utils import require_role
 
-@login_required
+from django.shortcuts import render
+from .models import Permit
+
 def migration_dashboard(request):
-    require_role(request.user, User.MIGRATION, User.ADMIN)
-
-    today = timezone.now().date()  # pass today to template
-    permits = Permit.objects.select_related("project").all().order_by("expiry_date")
-
-    return render(request, "core/migration_dashboard.html", {
-        "permits": permits,
-        "today": today
-    })
+    today = timezone.now().date()
+    ngo_permits = Permit.objects.filter(permit_type="NGO")
+    foreign_worker_permits = Permit.objects.filter(permit_type="FOREIGN_WORKER")
+    context = {
+        "today": today,
+        "ngo_permits": ngo_permits,
+        "foreign_worker_permits": foreign_worker_permits,
+    }
+    return render(request, "core/migration_dashboard.html", context)
 
 @login_required
 def migration_dashboard(request):
